@@ -26,7 +26,20 @@ def doGet(request, session):
 		except Exception as e:
 			all_results.append('error in {}: {}'.format(path, str(e)))
 			
+	successes, failures, errors = 0, 0, 0
+	
+	for data in all_results:
+		successes += 1 if data.get('success') else 0
+		failures += data.get('failures')
+		errors += data.get('errors')
+	
+	res = {
+		'successes': successes,
+		'failures': failures,
+		'errors': errors,
+		'all_tests': all_results
+	}
 	return {
 		'contentType': 'application/json',
-		'response': json.dumps(all_results, indent=2)
+		'response': json.dumps(res, indent=2)
 	}
