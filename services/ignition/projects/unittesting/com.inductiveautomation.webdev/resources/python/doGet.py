@@ -1,5 +1,5 @@
 def doGet(request, session):
-	import os, json
+	import os, json, unittest, inspect
 	static_path = unittests.CONSTANTS.ROOT_PATH
 	all_test_files = []
 	for root, dirs, files in os.walk(static_path):
@@ -15,14 +15,17 @@ def doGet(request, session):
 		local_scope = {}
 		try:
 			execfile(path, local_scope)
-			if 'run_tests' in local_scope:
-				try:
-					result = local_scope['run_tests']()
-					all_results.append(result)
-				except Exception as e:
-					all_results.append({'class': dir_name, 'error': str(e)})
-			else:
-				all_results.append({'class': dir_name, 'error': 'no run_tests() found'})
+			for name, obj in local_scope.items():
+				if (
+					inspect.isclass(obj)
+					and issubclass(obj, unittest.TestCase)
+					and obj is not unittest.TestCase
+				):
+					try:
+						result = unittests.TESTRUNNER.run_test_suite(obj)
+						all_results.append(result)
+					except Exception as e:
+						all_results.append({'class': name, 'error': str(e)})
 		except Exception as e:
 			all_results.append('error in {}: {}'.format(path, str(e)))
 			
