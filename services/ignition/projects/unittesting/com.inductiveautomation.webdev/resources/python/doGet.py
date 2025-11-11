@@ -32,6 +32,8 @@ def doGet(request, session):
 	successes, failures, errors = 0, 0, 0
 	
 	for data in all_results:
+		# there's gonna be some silent failures from errors n stuff here probably
+		# bc of not very robust aggregation
 		if not isinstance(data, dict):
 			continue
 		successes += 1 if data.get('success') else 0
