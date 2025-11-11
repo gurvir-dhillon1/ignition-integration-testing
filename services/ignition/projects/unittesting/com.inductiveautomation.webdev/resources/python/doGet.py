@@ -29,9 +29,11 @@ def doGet(request, session):
 	successes, failures, errors = 0, 0, 0
 	
 	for data in all_results:
+		if not isinstance(data, dict):
+			continue
 		successes += 1 if data.get('success') else 0
-		failures += data.get('failures')
-		errors += data.get('errors')
+		failures += data.get('failures', 0)
+		errors += data.get('errors', 0)
 	
 	res = {
 		'successes': successes,
