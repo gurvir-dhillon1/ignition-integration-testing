@@ -4,11 +4,11 @@ This is a sample Ignition project demonstrating an Ignition-native testing frame
 
 ---
 
-Traditional Python testing frameworks (like `pytest`) can’t execute inside Ignition because the platform runs **Jython 2.7**, which lacks direct CLI and virtual-environment support.  
+It’s impossible to run integration tests for Ignition-specific functions (e.g. system.tag.readBlocking, system.db.runQuery, or system.util.getProjectName) outside of the Ignition runtime.  
 This project bridges that gap by:
 
-- Defining `unittest.TestCase` classes inside Ignition **project scripts**
+- Defining `unittest.TestCase` classes inside Ignition project scripts
 - Exposing a WebDev endpoint that automatically discovers, executes, and reports results
 - Returning JSON summaries that can be consumed by Jenkins, Postman, or Perspective dashboards
 
-The project serves as a **reference implementation** for building automated unit and integration testing directly within Ignition 8.3 — without external tools or dependencies.
+The project is just me messing around because I thought it would be cool.
