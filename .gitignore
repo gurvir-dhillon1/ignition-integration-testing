@@ -1,0 +1,31 @@
+# Ignore the builtin vscode files
+*.vscode
+
+# MacOS Files
+.DS_Store
+
+# Ignition content
+**/config/local
+**/config/resources/local
+
+**/conversion-report.txt
+**/.resources/
+
+# Secrets
+secrets/*
+
+# Migration logs
+**/migration-log*
+
+# Local Environment Variables
+.env
+
+# Node 
+node_modules
+
+# Tailwind compiled CSS
+tailwind/tailwind-compiled.css
+tailwind/node_modules
+
+# Temp test files
+temp/
