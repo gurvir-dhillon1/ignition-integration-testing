@@ -4,5 +4,11 @@
     "name": "test tag",
     "defaultValue": 3,
     "tagType": "AtomicTag"
+  },
+  {
+    "valueSource": "memory",
+    "name": "always returns 5",
+    "defaultValue": 5,
+    "tagType": "AtomicTag"
   }
 ]
