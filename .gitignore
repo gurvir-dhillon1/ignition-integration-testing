@@ -29,3 +29,6 @@ tailwind/node_modules
 
 # Temp test files
 temp/
+
+# JVM Bytecode
+*.class
