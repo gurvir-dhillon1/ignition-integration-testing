@@ -1,0 +1,62 @@
+"""
+IGNITION UNIT TESTING – PACKAGE STRUCTURE REQUIREMENT
+
+Overview:
+When you create a new script in Ignition, the designer does not create a single .py file.
+Instead, it stores that script as a directory containing a code.py file (and possibly other resources).
+
+Example:
+project_name/
+  scripts/
+    MyLib/
+      code.py    (actual script content)
+
+This is Ignition’s resource-based scripting system. It’s great for version control, but it also means that from Python’s point of view, each “script” is actually a package directory.
+
+Why __init__.py Is Needed:
+Our unit test runner uses Python’s built-in unittest discovery.
+discover() works by importing test modules using Python’s normal import rules.
+For Python to treat a directory as an importable package, in Python 2.7 (Jython) there must be an __init__.py file inside that directory.
+Without __init__.py, unittest will silently skip your test because it cannot import the package.
+
+What This Means for Ignition Test Scripts:
+When you create a test script in Ignition (for example, TestMyFunctions), Ignition creates:
+unittests/
+  TestMyFunctions/
+    code.py
+
+For unittest.discover() to find it, you must also create:
+unittests/
+  TestMyFunctions/
+    __init__.py   (empty file is fine)
+    code.py
+
+This turns TestMyFunctions into a real Python package that can be imported as:
+import unittests.TestMyFunctions.code
+
+Quick Steps to Make a Test Module Work:
+1. In Ignition Designer, create your new test script (e.g., TestSomeFeature) under the unittests folder.
+2. In the filesystem (project resource folder), navigate to:
+   <project_root>/unittests/TestSomeFeature/
+3. Create a new empty file named:
+   __init__.py
+4. Done — now the test discovery process can import your test.
+
+Example Working Structure:
+unittests/
+  __init__.py                     # makes 'unittests' a package
+  TestTestableFunctions/
+    __init__.py                    # makes subfolder a package
+    code.py                        # contains unittest.TestCase classes
+  TestAnotherFunction/
+    __init__.py
+    code.py
+
+Why This Is Required in Ignition:
+Cause: Ignition scripts are directories, not .py files.
+Effect: Without __init__.py, Python (and thus unittest) can’t treat them as importable packages.
+Fix: Add a blank __init__.py so the test runner can import and execute them.
+
+TL;DR:
+Every test script directory in Ignition must contain an __init__.py (even empty) for Python’s unittest discovery to find and run it.
+"""
