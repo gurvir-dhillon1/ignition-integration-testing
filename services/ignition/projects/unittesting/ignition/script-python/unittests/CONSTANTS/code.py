@@ -1,1 +1,0 @@
-ROOT_PATH = '/usr/local/bin/ignition/data/projects/{}/ignition/script-python/unittests'.format(system.util.getProjectName())
