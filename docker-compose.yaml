@@ -26,14 +26,16 @@ services:
         com.inductiveautomation.jdbc.postgresql,
         com.inductiveautomation.webdev,
         com.inductiveautomation.opcua
+      IGNITION_UID: '0'
+      IGNITION_GID: '0'
     command: *GATEWAYCOMMAND
-
     labels:
       traefik.enable: "true"
       traefik.hostname: *GATEWAYNAME
     networks:
       - default
       - proxy
+    user: '0:0'
 
   database:
     image: postgres
