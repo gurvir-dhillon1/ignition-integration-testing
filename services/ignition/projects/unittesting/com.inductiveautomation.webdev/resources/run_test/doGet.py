@@ -1,36 +1,40 @@
 def doGet(request, session):
 	import json, unittest, os, importlib
+	url_param_name = 'test_files'
 	url_params = request.get('params')
-	test_file = url_params.get('test_file')
+	test_files = url_params.get(url_param_name)
 	ROOT_PATH = unittests.TestRunner.ROOT_PATH
-	if not test_file or '/' in test_file or '\\' in test_file:
+	if not test_files or '/' in test_files or '\\' in test_files:
 		return {
 			'contentType': 'text/plain',
-			'response': 'no valid test file (check test_file url parameter is not empty and does not contain \'/\' or \'\\\')'
+			'response': 'no valid {0} (check {0} url parameter is not empty and does not contain \'/\' or \'\\\')'.format(url_param_name)
 		}
+	test_files = [f.strip() for f in test_files.split(',') if f.strip()]
 
-	test_file_path = os.path.join(ROOT_PATH, test_file)
 	if ROOT_PATH not in sys.path:
 		sys.path.insert(0, ROOT_PATH)
 
-	module_name = 'unittests.{0}'.format(test_file)
-
-	try:
-		module = importlib.import_module(module_name)
-	except ImportError as e:
-		return {
-			'contentType': 'text/plain',
-			'response': 'unable to import module {0}: {1}'.format(module_name, str(e))
-		}
-
+	imported_modules = []
+	import_errors = {}
 	loader = unittest.TestLoader()
-	suite = loader.loadTestsFromModule(module)
+	suite = unittest.TestSuite()
+
+	for f in test_files:
+		module_name = 'unittests.{0}'.format(f)
+		try:
+			module = importlib.import_module(module_name)
+			suite.addTests(loader.loadTestsFromModule(module))
+			imported_modules.append(module_name)
+		except ImportError as e:
+			import_errors[f] = str(e)
 	
 	runner = unittest.TextTestRunner(resultclass=unittests.TestRunner.JsonTestResult, verbosity=2)
 	result = runner.run(suite)
 
 	res = unittests.TestRunner.generate_result_object(result)
-	res['requestedModule'] = module_name
+	res['requestedModule'] = imported_modules
+	if import_errors:
+		res['import_errors'] = import_errors
 
 	return {
 		'contentType': 'application/json',
