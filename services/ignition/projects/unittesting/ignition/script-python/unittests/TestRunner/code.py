@@ -1,5 +1,5 @@
 """
-IGNITION UNIT TESTING – PACKAGE STRUCTURE REQUIREMENT
+IGNITION UNIT TESTING - PACKAGE STRUCTURE REQUIREMENT
 
 Overview:
 When you create a new script in Ignition, the designer does not create a single .py file.
